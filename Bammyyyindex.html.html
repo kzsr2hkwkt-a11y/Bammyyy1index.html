@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ระบบบัญชีสมุดรายวันเฉพาะ – ร้านแบมมี่เครื่องเขียน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5ef;--paper:#fff;--ink:#1d2a3a;--mut:#5b6b7a;--line:#c9d3c4;--head:#e3ebdc;--acc:#1f4e79;--bad:#b3261e;--ok:#1b6e3c;--badbg:#fde8e6;--okbg:#e2f3e7;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a21;--paper:#1c242d;--ink:#e6ecf2;--mut:#9aabba;--line:#34414e;--head:#243140;--acc:#8ec1f0;--bad:#ff8f87;--ok:#7fd7a0;--badbg:#3b1f1d;--okbg:#17301f}}
+:root[data-theme="dark"]{--bg:#141a21;--paper:#1c242d;--ink:#e6ecf2;--mut:#9aabba;--line:#34414e;--head:#243140;--acc:#8ec1f0;--bad:#ff8f87;--ok:#7fd7a0;--badbg:#3b1f1d;--okbg:#17301f}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Sarabun,"Noto Sans Thai",Tahoma,sans-serif}
+header{padding:14px 14px 6px}h1{font-size:19px;margin:0}header p{margin:2px 0 8px;color:var(--mut);font-size:13px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:inherit;border:1px solid var(--acc);background:var(--acc);color:var(--paper);border-radius:6px;padding:6px 12px;cursor:pointer}
+button.o{background:transparent;color:var(--acc)}
+nav{display:flex;gap:4px;overflow-x:auto;padding:6px 14px;border-bottom:2px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+nav button{background:transparent;color:var(--ink);border:1px solid var(--line);white-space:nowrap;padding:5px 10px}
+nav button.on{background:var(--acc);color:var(--paper);border-color:var(--acc)}
+main{padding:12px 14px 40px;max-width:1100px;margin:auto}
+h2{font-size:17px;margin:18px 0 6px}h3{font-size:15px;margin:16px 0 4px}
+.w{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--head);font-weight:600;text-align:center}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}td.c{text-align:center}
+tr.t td{font-weight:700;border-top:2px solid var(--ink);border-bottom:3px double var(--ink)}
+.badge{padding:3px 10px;border-radius:99px;font-size:13px;font-weight:600}
+.ok{background:var(--okbg);color:var(--ok)}.bad{background:var(--badbg);color:var(--bad)}
+.box{padding:8px 12px;border-radius:6px;margin:8px 0;font-size:14px}
+form{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px;margin-top:12px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px}
+label{display:block;font-size:12.5px;color:var(--mut)}
+input,select{width:100%;font:inherit;padding:5px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--ink)}
+small{color:var(--mut)}
+.jt{min-width:760px}.jt th,.jt td{border:0;border-left:1px solid var(--ink);border-bottom:0;padding:3px 7px}.jt th{border-bottom:1px solid var(--ink);border-top:2px solid var(--ink);background:transparent;font-weight:600}.jt td{vertical-align:top}.jt tr.t td{border-top:1px solid var(--ink);border-bottom:3px double var(--ink);font-weight:600}.jt tr.nr td{border-top:0;font-size:12px;color:var(--mut)}.jt td.s{padding-left:2px;width:2.4em}.jt td.n{padding-right:4px}.ind{display:inline-block;width:1.8em}
+.jh{display:grid;grid-template-columns:1fr auto 1fr;margin:18px 0 4px}.jh b{font-size:17px}.jh span:last-child{text-align:right;color:var(--mut)}
+</style></head><body>
+<header><h1>ระบบบัญชีสมุดรายวันเฉพาะ – ร้านแบมมี่เครื่องเขียน</h1>
+<p>กิจการซื้อมาขายไป (ไม่มี VAT) · ระบบสินค้าแบบ Periodic · ข้อมูลสมมติ · เดือนสิงหาคม 2563</p>
+<div class="bar"><button id="ld">กดปุ่มโหลดตัวอย่างเพื่อดูรายการค้า</button><button class="o" id="cl">ล้างข้อมูล</button><span id="st" class="badge"></span></div></header>
+<nav id="nv"></nav><main id="mn"></main>
+<script>
+const A={11:'เงินสด',12:'เงินฝากธนาคาร',13:'ลูกหนี้การค้า',14:'สินค้าคงเหลือ',15:'วัสดุสำนักงาน',16:'เครื่องตกแต่ง',21:'เจ้าหนี้การค้า',22:'เจ้าหนี้อื่น (เครื่องตกแต่ง)',31:'ทุน',41:'ขาย',42:'รับคืนสินค้า',43:'ส่วนลดจ่าย',51:'ซื้อ',52:'ส่งคืนสินค้า',53:'ค่าขนส่งเข้า',54:'ส่วนลดรับ',55:'ค่าเช่า',56:'ค่าสาธารณูปโภค',57:'เงินเดือน'};
+const TY={1:'สินทรัพย์',2:'หนี้สิน',3:'ส่วนของเจ้าของ',4:'รายได้',5:'ค่าใช้จ่าย/ต้นทุน'};
+const DN=a=>[11,12,13,14,15,16,42,43,51,53,55,56,57].includes(a);
+const B={P:'สมุดรายวันซื้อ',S:'สมุดรายวันขาย',CR:'สมุดรายวันรับเงิน',CP:'สมุดรายวันจ่ายเงิน',G:'สมุดรายวันทั่วไป'};
+const BS={P:'ซื้อ',S:'ขาย',CR:'รับเงิน',CP:'จ่ายเงิน',G:'ทั่วไป'};
+const TABS=[['coa','ผังบัญชี'],['P','ซื้อ'],['S','ขาย'],['CR','รับเงิน'],['CP','จ่ายเงิน'],['G','ทั่วไป'],['L','แยกประเภท'],['TB','งบทดลอง'],['T','รายการค้า']];
+const $=s=>document.querySelector(s);
+const f=n=>n?(+n).toLocaleString('en-US',{minimumFractionDigits:n%1?2:0}):'-';
+const R=x=>Math.round(x*100)/100;
+let E=[],tab='coa',msg=null,gN=2;
+const L=ls=>ls.map(([a,dr,cr,n])=>({a,dr:dr||0,cr:cr||0,n}));
+const mk=(b,d,desc,ls,w,ref,t)=>({b,d,desc,ref,t,lines:L(ls),w});
+const NM='บริษัท นะโม จำกัด',FS='บริษัท ฟ้าใส จำกัด',DD='บริษัท ดีดี จำกัด',HT='มหาวิทยาลัยหอการค้าไทย',KT='บริษัท เข็มทอง จำกัด',KY='โรงเรียนอนุบาลกล้วยหอม';
+const SAMPLE=[
+mk('CR',1,'นำเงินสดและเงินฝากธนาคารมาลงทุน',[[11,300000],[12,200000],[31,0,500000]],'มีเงินสดและเงินฝากธนาคารเข้ากิจการ จึงลงสมุดรับเงิน (เครดิตทุนเป็นบัญชีอื่น)'),
+mk('S',2,HT,[[13,30000,0,HT],[41,0,30000]],'ขายเชื่อ → สมุดรายวันขาย (เดบิตลูกหนี้ เครดิตขาย)','1111','2/10,n/30'),
+mk('P',3,NM,[[51,55000],[21,0,55000,NM]],'ซื้อเชื่อ → สมุดรายวันซื้อ (เดบิตซื้อ เครดิตเจ้าหนี้)','2001','2/10,n/30'),
+mk('CP',4,'จ่ายค่าขนส่งจากการซื้อสินค้า',[[53,2000],[11,0,2000]],'จ่ายเงินสด (สมมติ) → สมุดรายวันจ่ายเงิน (ค่าขนส่งเข้าเป็นบัญชีอื่น) ข้อความโจทย์ระบุ “ซื้อวันที่ 2” แต่รายการซื้อคือวันที่ 3 จึงถือว่าเป็นค่าขนส่งของรายการซื้อ 55,000'),
+mk('S',5,KT,[[13,45000,0,KT],[41,0,45000]],'ขายเชื่อ → สมุดรายวันขาย','1112','2/10,n/30'),
+mk('CR',6,'ขายสินค้าได้รับเป็นเช็คและนำฝากธนาคารทันที',[[12,39900],[41,0,39900]],'ได้รับเงิน → สมุดรับเงิน; ส่วนลดการค้าไม่บันทึกบัญชี: 42,000 − (42,000×5%) = 39,900'),
+mk('P',8,FS,[[51,78000],[21,0,78000,FS]],'ซื้อเชื่อ → สมุดรายวันซื้อ','3456','1/10,n/30'),
+mk('CP',12,'จ่ายชำระหนี้ทั้งสิ้นให้'+NM+' เป็นเช็ค',[[21,55000,0,NM],[12,0,53900],[54,0,1100]],'จ่ายเงิน → สมุดจ่ายเงิน; ซื้อวันที่ 3 จ่ายวันที่ 12 ภายใน 10 วัน ได้ส่วนลด 55,000×2% = 1,100 จ่ายจริง 53,900'),
+mk('CR',13,'รับชำระหนี้ทั้งสิ้นจาก'+HT,[[11,30000],[13,0,30000,HT]],'รับเงินสด (สมมติ) → สมุดรับเงิน; ขายวันที่ 2 รับวันที่ 13 = 11 วัน เกิน 10 วัน จึงไม่ได้ส่วนลด รับเต็ม 30,000'),
+mk('G',13,'ซื้อเครื่องตกแต่งเป็นเงินเชื่อ',[[16,5000],[22,0,5000]],'ไม่ใช่สินค้าเพื่อขาย จึงไม่ลงสมุดซื้อ และไม่ใช่เจ้าหนี้การค้า → สมุดรายวันทั่วไป'),
+mk('CR',14,'รับชำระหนี้ทั้งสิ้นจาก'+KT+' เป็นเช็คและนำฝากธนาคารทันที',[[12,44100],[43,900],[13,0,45000,KT]],'รับเงิน → สมุดรับเงิน; ขายวันที่ 5 รับวันที่ 14 ภายใน 10 วัน ส่วนลด 45,000×2% = 900 รับจริง 44,100'),
+mk('G',16,'รับคืนสินค้าจากการขายเมื่อวันที่ 2 สิงหาคม',[[42,1500],[13,0,1500,HT]],'ไม่มีเงินสดเข้า-ออก และไม่ใช่ซื้อ/ขาย → สมุดทั่วไป (ลูกค้าชำระเต็มจำนวนแล้ว บัญชีย่อยจึงมียอดเครดิต 1,500 รอคืนเงินหรือหักจากการขายครั้งต่อไป)'),
+mk('S',17,KY,[[13,15000,0,KY],[41,0,15000]],'ขายเชื่อ → สมุดรายวันขาย','1113','1/15,n/30'),
+mk('CP',18,'จ่ายชำระหนี้ทั้งสิ้นให้'+FS+' เป็นเงินสด',[[21,78000,0,FS],[11,0,77220],[54,0,780]],'จ่ายเงิน → สมุดจ่ายเงิน; ซื้อวันที่ 8 จ่ายวันที่ 18 = 10 วัน ยังอยู่ในเงื่อนไข 1/10 ส่วนลด 780 จ่ายจริง 77,220'),
+mk('P',19,DD,[[51,34400],[21,0,34400,DD]],'ซื้อเชื่อ → สมุดรายวันซื้อ','4444','3/10,n/30'),
+mk('CP',21,'ซื้อสินค้าเป็นเงินสด 40,000 บาท ได้รับส่วนลดการค้า 3%',[[51,38800],[11,0,38800]],'จ่ายเงิน → สมุดจ่ายเงิน (ซื้อเป็นบัญชีอื่น); 40,000 − 3% = 38,800'),
+mk('CP',25,'จ่ายค่าเช่าอาคารเป็นเงินสด',[[55,23000],[11,0,23000]],'จ่ายเงิน → สมุดจ่ายเงิน'),
+mk('CP',29,'จ่ายชำระหนี้ทั้งสิ้นให้'+DD+' เป็นเงินสด',[[21,34400,0,DD],[11,0,33368],[54,0,1032]],'จ่ายเงิน → สมุดจ่ายเงิน; ซื้อวันที่ 19 จ่ายวันที่ 29 = 10 วัน ส่วนลด 34,400×3% = 1,032 จ่ายจริง 33,368'),
+mk('CP',30,'จ่ายค่าสาธารณูปโภคเป็นเงินสด',[[56,4000],[11,0,4000]],'จ่ายเงิน → สมุดจ่ายเงิน'),
+mk('CP',31,'จ่ายเงินเดือนพนักงานเป็นเงินสด',[[57,16000],[11,0,16000]],'จ่ายเงิน → สมุดจ่ายเงิน')];
+const sm=(e,a,s)=>e.lines.filter(l=>l.a==a).reduce((t,l)=>t+l[s],0);
+const ot=(e,s,ex)=>e.lines.filter(l=>!ex.includes(l.a)&&l[s]);
+const so=()=>[...E].sort((x,y)=>x.d-y.d);
+const dt=d=>`ส.ค. ${d}`;
+const post=()=>so().flatMap(e=>e.lines.map(l=>({...l,d:e.d,b:e.b,desc:e.desc,ref:e.ref})));
+function bal(){const m={};post().forEach(p=>{m[p.a]=m[p.a]||{dr:0,cr:0};m[p.a].dr+=p.dr;m[p.a].cr+=p.cr});return m}
+function subs(a){const m={};post().filter(p=>p.a==a).forEach(p=>{(m[p.n]=m[p.n]||[]).push(p)});return m}
+function tbSum(){const m=bal();let d=0,c=0;for(const a in m){const x=R(m[a].dr-m[a].cr);x>0?d+=x:c-=x}return[R(d),R(c)]}
+const th=a=>`<tr>${a.map(x=>`<th>${x}</th>`).join('')}</tr>`;
+const tr=(a,cl)=>`<tr${cl?` class="${cl}"`:''}>${a.map(x=>typeof x=='object'?`<td class="${x.c}">${x.v}</td>`:`<td>${x}</td>`).join('')}</tr>`;
+const N=v=>({c:'n',v:f(v)}),C=v=>({c:'c',v});
+const W=(h,c)=>`<div class="w"><table${c?` class="${c}"`:''}>${h}</table></div>`;
+function jr(k){const es=so().filter(e=>e.b==k);
+const td=(x,c)=>`<td${c?` class="${c}"`:''}>${x||''}</td>`,rw=(c,cl)=>`<tr${cl?` class="${cl}"`:''}>${c.join('')}</tr>`;
+const nc=v=>td(v?f(v):'','n'),am=v=>{const r=R(v),i=Math.floor(r),s=Math.round((r-i)*100);return v?td(i.toLocaleString('en-US'),'n')+td(s?String(s).padStart(2,'0'):'-','n s'):td('')+td('')};
+const yr=c=>es.length?rw([td('2563','c'),...Array(c-1).fill(td(''))]):'';
+const dc=(i,d)=>td(i?d:'ส.ค. '+d,'c'),E0=td('');
+const D='<th rowspan=3>วัน เดือน ปี</th><th rowspan=3>เลขที่<br>ใบสำคัญ</th><th rowspan=3>คำอธิบาย</th>';
+const OH='<th colspan=3>บัญชีอื่น</th>',OS='<th>ชื่อบัญชี</th><th>เลขที่<br>บัญชี</th><th>จำนวนเงิน</th>';
+const oth=o=>[td(o.map(l=>A[l.a]).join('<br>')),td(o.map(l=>[11,12].includes(l.a)?'C':l.a).join('<br>'),'c')];
+let head,body='';
+if(k=='S'||k=='P'){const ac=k=='S'?41:51,sd=k=='S'?'cr':'dr';let s=0;
+ head=`<tr><th>วัน เดือน ปี</th><th>เลขที่<br>ใบกำกับสินค้า</th><th>${k=='S'?'บัญชีที่เดบิต':'บัญชีที่เครดิต'}</th><th>เงื่อนไข<br>การชำระเงิน</th><th>เลขที่<br>บัญชี</th><th colspan=2>จำนวนเงิน</th></tr>`;
+ body=yr(7)+es.map((e,i)=>{const m=sm(e,ac,sd);s+=m;return rw([dc(i,e.d),td(e.ref,'c'),td(e.desc),td(e.t,'c'),td('✓','c'),am(m)])}).join('');
+ if(es.length)body+=rw([td('31','c'),E0,td(k=='S'?'เดบิต ลูกหนี้การค้า – เครดิต ขาย':'เดบิต ซื้อ – เครดิต เจ้าหนี้การค้า'),E0,td(k=='S'?'13/41':'51/21','c'),am(s)],'t')}
+else if(k=='CR'){const t=Array(6).fill(0);
+ head=`<tr>${D}<th colspan=3>เดบิต</th><th colspan=6>เครดิต</th></tr><tr><th rowspan=2>เงินสด</th><th rowspan=2>เงินฝาก<br>ธนาคาร</th><th rowspan=2>ส่วนลดจ่าย</th><th colspan=2>ลูกหนี้การค้า</th><th rowspan=2>ขาย</th>${OH}</tr><tr><th>✓</th><th>จำนวนเงิน</th>${OS}</tr>`;
+ body=yr(12);
+ es.forEach((e,i)=>{const o=ot(e,'cr',[13,41]),v=[sm(e,11,'dr'),sm(e,12,'dr'),sm(e,43,'dr'),sm(e,13,'cr'),sm(e,41,'cr'),o.reduce((x,l)=>x+l.cr,0)];v.forEach((x,j)=>t[j]+=x);
+  body+=rw([dc(i,e.d),td(e.ref,'c'),td(e.desc),nc(v[0]),nc(v[1]),nc(v[2]),td(v[3]?'✓':'','c'),nc(v[3]),nc(v[4]),...oth(o),td(o.map(l=>f(l.cr)).join('<br>'),'n')])});
+ if(es.length)body+=rw([E0,E0,td('รวม'),nc(t[0]),nc(t[1]),nc(t[2]),E0,nc(t[3]),nc(t[4]),E0,E0,nc(t[5])],'t')+rw([E0,E0,E0,...['(11)','(12)','(43)','','(13)','(41)'].map(x=>td(x,'c')),E0,E0,E0],'nr')}
+else if(k=='CP'){const t=Array(6).fill(0);
+ head=`<tr>${D}<th colspan=3>เครดิต</th><th colspan=6>เดบิต</th></tr><tr><th rowspan=2>เงินสด</th><th rowspan=2>เงินฝาก<br>ธนาคาร</th><th rowspan=2>ส่วนลดรับ</th><th colspan=2>เจ้าหนี้การค้า</th><th rowspan=2>ซื้อ</th>${OH}</tr><tr><th>✓</th><th>จำนวนเงิน</th>${OS}</tr>`;
+ body=yr(12);
+ es.forEach((e,i)=>{const o=ot(e,'dr',[21,51]),v=[sm(e,11,'cr'),sm(e,12,'cr'),sm(e,54,'cr'),sm(e,21,'dr'),sm(e,51,'dr'),o.reduce((x,l)=>x+l.dr,0)];v.forEach((x,j)=>t[j]+=x);
+  body+=rw([dc(i,e.d),td(e.ref,'c'),td(e.desc),nc(v[0]),nc(v[1]),nc(v[2]),td(v[3]?'✓':'','c'),nc(v[3]),nc(v[4]),...oth(o),td(o.map(l=>f(l.dr)).join('<br>'),'n')])});
+ if(es.length)body+=rw([E0,E0,td('รวม'),nc(t[0]),nc(t[1]),nc(t[2]),E0,nc(t[3]),nc(t[4]),E0,E0,nc(t[5])],'t')+rw([E0,E0,E0,...['(11)','(12)','(54)','','(21)','(51)'].map(x=>td(x,'c')),E0,E0,E0],'nr')}
+else{let d=0,c=0;
+ head='<tr><th>วัน เดือน ปี</th><th>รายการ</th><th>เลขที่<br>บัญชี</th><th colspan=2>เดบิต</th><th colspan=2>เครดิต</th></tr>';
+ body=yr(7);
+ es.forEach((e,i)=>{[...e.lines.filter(l=>l.dr),...e.lines.filter(l=>l.cr)].forEach((l,j)=>{d+=l.dr;c+=l.cr;body+=rw([j?E0:dc(i,e.d),td((l.cr?'<span class="ind"></span>':'')+A[l.a]+(l.n?' – '+l.n:'')),td(l.a+(l.n?'/✓':''),'c'),am(l.dr),am(l.cr)])});
+  body+=rw([E0,td('<span class="ind"></span>'+e.desc),E0,E0,E0,E0,E0])});
+ if(es.length)body+=rw([E0,td('รวม'),E0,am(d),am(c)],'t')}
+return(es.length?'':'<div class="box">ยังไม่มีรายการ – กดโหลดตัวอย่าง หรือบันทึกรายการด้านล่าง</div>')+W(`<thead>${head}</thead><tbody>${body}</tbody>`,'jt')}
+const I=(id,l,t='number',x='')=>`<div><label for="${id}">${l}</label><input id="${id}" type="${t}" ${t=='number'?'min="0" step="0.01" inputmode="decimal"':''} ${x}></div>`;
+const OP=ex=>`<option value="">– เลือก –</option>`+Object.keys(A).filter(a=>!ex.includes(+a)).map(a=>`<option value="${a}">${a} ${A[a]}</option>`).join('');
+const nm=a=>`<datalist id="dl${a}">${Object.keys(subs(a)).map(n=>`<option value="${n}">`).join('')}</datalist>`;
+function form(k){const dy=I('d','วันที่ (1–31)','number','min="1" max="31" step="1"');let b='';
+ if(k=='S'||k=='P')b=dy+I('ref','เลขที่ใบกำกับสินค้า','text')+I('nm',k=='S'?'ชื่อลูกหนี้':'ชื่อเจ้าหนี้','text',`list="dl${k=='S'?13:21}"`)+I('tm','เงื่อนไข เช่น 2/10,n/30','text')+I('am','จำนวนเงิน');
+ if(k=='CR')b=dy+I('rf','เลขที่ใบสำคัญ','text')+I('ds','คำอธิบาย','text')+I('c1','เดบิต เงินสด')+I('c2','เดบิต เงินฝากธนาคาร')+I('c3','เดบิต ส่วนลดจ่าย')+I('dn','ลูกหนี้ ชื่อ','text','list="dl13"')+I('d4','เครดิต ลูกหนี้')+I('d5','เครดิต ขาย')+`<div><label>เครดิต บัญชีอื่น</label><select id="oa">${OP([13,21])}</select></div>`+I('d6','จำนวนบัญชีอื่น');
+ if(k=='CP')b=dy+I('rf','เลขที่ใบสำคัญ','text')+I('ds','คำอธิบาย','text')+I('d4','เครดิต เงินสด')+I('d5','เครดิต เงินฝากธนาคาร')+I('d6','เครดิต ส่วนลดรับ')+I('cn','เจ้าหนี้ ชื่อ','text','list="dl21"')+I('c1','เดบิต เจ้าหนี้')+I('pc','เดบิต ซื้อ')+`<div><label>เดบิต บัญชีอื่น</label><select id="oa">${OP([13,21])}</select></div>`+I('c2','จำนวนบัญชีอื่น');
+ if(k=='G'){gN=2;b=dy+I('ds','คำอธิบาย','text')+`</div><div id="gl">${gr(0)+gr(1)}</div><div class="bar" style="margin-top:6px"><button type="button" class="o" id="ga">+ เพิ่มบรรทัด</button>`}
+ return`${nm(13)}${nm(21)}<form id="fm" data-k="${k}"><b>บันทึกรายการใน${B[k]}</b><div class="g" style="margin-top:6px">${b}</div><div class="bar" style="margin-top:8px"><button>บันทึกและผ่านรายการ</button></div></form>`}
+const gr=i=>`<div class="g" style="margin-top:6px"><div><label>บัญชี</label><select id="ga${i}">${OP([])}</select></div>${I('gn'+i,'ชื่อ (13/21)','text')}${I('gd'+i,'เดบิต')}${I('gc'+i,'เครดิต')}</div>`;
+const v=id=>+($('#'+id)&&$('#'+id).value)||0,s=id=>($('#'+id)&&$('#'+id).value||'').trim();
+function save(k){const d=v('d');let ls=[],ref='',t='',desc=s('ds');
+ if(k=='S'||k=='P'){const n=s('nm'),m=v('am');ref=s('ref');t=s('tm');desc=n;ls=k=='S'?[[13,m,0,n],[41,0,m]]:[[51,m],[21,0,m,n]]}
+ if(k=='CR')ref=s('rf'),ls=[[11,v('c1')],[12,v('c2')],[43,v('c3')],[13,0,v('d4'),s('dn')],[41,0,v('d5')],[+s('oa')||0,0,v('d6')]];
+ if(k=='CP')ref=s('rf'),ls=[[21,v('c1'),0,s('cn')],[51,v('pc')],[+s('oa')||0,v('c2')],[11,0,v('d4')],[12,0,v('d5')],[54,0,v('d6')]];
+ if(k=='G')for(let i=0;i<gN;i++)ls.push([+s('ga'+i)||0,v('gd'+i),v('gc'+i),s('gn'+i)]);
+ ls=L(ls).filter(l=>l.dr||l.cr);
+ const dr=R(ls.reduce((x,l)=>x+l.dr,0)),cr=R(ls.reduce((x,l)=>x+l.cr,0));
+ if(!(d>=1&&d<=31))return'กรอกวันที่ 1–31';
+ if(!ls.length)return'ยังไม่ได้กรอกจำนวนเงิน';
+ if(ls.some(l=>!l.a))return'มีจำนวนเงินแต่ยังไม่ได้เลือกบัญชี';
+ if(dr!=cr)return`ไม่บันทึก: ยอดเดบิต ${f(dr)} ไม่เท่ากับยอดเครดิต ${f(cr)} (ต่างกัน ${f(Math.abs(R(dr-cr)))})`;
+ if(ls.some(l=>(l.a==13||l.a==21)&&!l.n))return'บัญชีลูกหนี้/เจ้าหนี้ต้องระบุชื่อ เพื่อผ่านรายการไปบัญชีย่อย';
+ E.push({b:k,d,desc,ref,t,lines:ls});return null}
+function led(){const m=post();let h='<h2>บัญชีแยกประเภททั่วไป</h2>';
+ Object.keys(A).forEach(a=>{const p=m.filter(x=>x.a==a);if(!p.length)return;let r=0;
+  h+=`<h3>${a} ${A[a]}${a==13||a==21?' <small>(บัญชีคุม)</small>':''}</h3>`+W(th(['วันที่','รายการ','สมุด','เดบิต','เครดิต','คงเหลือ'])+p.map(x=>{r=R(r+(DN(+a)?x.dr-x.cr:x.cr-x.dr));return tr([dt(x.d),x.desc,C(BS[x.b]),N(x.dr),N(x.cr),N(r)])}).join(''))});
+ [13,21].forEach(a=>{const S=subs(a);h+=`<h2>บัญชีแยกประเภทย่อย${a==13?'ลูกหนี้การค้า':'เจ้าหนี้การค้า'}</h2>`;let tot=0;
+  for(const n in S){let r=0;h+=`<h3>${n}</h3>`+W(th(['วันที่','รายการ','สมุด','เดบิต','เครดิต','คงเหลือ'])+S[n].map(x=>{r=R(r+(a==13?x.dr-x.cr:x.cr-x.dr));return tr([dt(x.d),x.desc,C(BS[x.b]),N(x.dr),N(x.cr),N(r)])}).join(''));tot+=r}
+  const ct=bal()[a]?R(a==13?bal()[a].dr-bal()[a].cr:bal()[a].cr-bal()[a].dr):0;
+  h+=`<div class="box ${R(tot)==ct?'ok':'bad'}">ยอดรวมบัญชีย่อย ${f(R(tot))} ${R(tot)==ct?'=':'≠'} ยอดบัญชีคุม ${f(ct)} บาท</div>`});
+ return E.length?h:'<div class="box">ยังไม่มีรายการ</div>'}
+function tb(){const m=bal();let d=0,c=0,rows='';
+ Object.keys(A).forEach(a=>{if(!m[a])return;const x=R(m[a].dr-m[a].cr);x>0?d+=x:c-=x;rows+=tr([C(a),A[a],N(x>0?x:0),N(x<0?-x:0)])});
+ d=R(d);c=R(c);const ok=d==c;
+ return`<h2>งบทดลอง ณ วันที่ 31 สิงหาคม 2563</h2><div class="box ${ok?'ok':'bad'}">${E.length?ok?`✓ งบทดลองสมดุล: เดบิต ${f(d)} = เครดิต ${f(c)}`:`⚠ งบทดลองไม่สมดุล: เดบิต ${f(d)} ≠ เครดิต ${f(c)} (ต่างกัน ${f(Math.abs(R(d-c)))})`:'ยังไม่มีรายการ'}</div>`+W(th(['เลขที่','ชื่อบัญชี','เดบิต','เครดิต'])+rows+tr(['','รวม',N(d),N(c)],'t'))}
+function coa(){let h='<h2>ผังบัญชี (Chart of Accounts)</h2>'+W(th(['เลขที่','ชื่อบัญชี','หมวด','ด้านปกติ'])+Object.keys(A).map(a=>tr([C(a),A[a],TY[a[0]],C(DN(+a)?'เดบิต':'เครดิต')])).join(''));
+ return h+`<div class="box">บัญชี 14 สินค้าคงเหลือ ใช้ในการปิดบัญชีสิ้นงวด (ระบบ Periodic จึงไม่มียอดระหว่างเดือน) · บัญชี 13 และ 21 เป็นบัญชีคุม มีบัญชีย่อยรายตัว · 15, 52 ไม่มีรายการในเดือนนี้</div>
+<h3>วิธีใช้</h3><small>เลือกแท็บสมุดแต่ละเล่ม → กรอกฟอร์ม → กด “บันทึกและผ่านรายการ” ระบบจะผ่านรายการไปบัญชีแยกประเภททั่วไปและบัญชีย่อยอัตโนมัติ และตรวจว่าเดบิต = เครดิตก่อนบันทึกทุกครั้ง ดูผลที่แท็บ “แยกประเภท” และ “งบทดลอง”</small>`}
+function tt(){return`<h2>ตารางรายการค้า 20 รายการ และเหตุผลที่เลือกสมุด</h2>`+W(th(['วันที่','รายการ','สมุด','เหตุผล / การคำนวณ'])+SAMPLE.map(e=>tr([dt(e.d),e.desc+(e.ref?` (ใบกำกับ ${e.ref}, ${e.t})`:''),C(BS[e.b]),`<small>${e.w}</small>`])).join(''))+`<div class="box">สมมติฐาน: รายการที่ไม่ระบุวิธีชำระ (ค่าขนส่ง, รับชำระจากหอการค้าไทย) ถือเป็นเงินสด · ส่วนลดการค้าไม่บันทึกบัญชี · นับวันส่วนลดจากวันซื้อ/ขาย</div>`}
+function draw(){$('#nv').innerHTML=TABS.map(([k,n])=>`<button class="${k==tab?'on':''}" data-t="${k}">${n}</button>`).join('');
+ const [d,c]=tbSum(),ok=d==c;const st=$('#st');st.className='badge '+(E.length?ok?'ok':'bad':'');st.textContent=E.length?ok?'งบทดลองสมดุล':'งบทดลองไม่สมดุล!':'ยังไม่มีข้อมูล';
+ let h='';if(B[tab])h=`<div class="jh"><span></span><b>${B[tab]}</b><span>หน้า 1</span></div>`+(msg?`<div class="box ${msg[0]}">${msg[1]}</div>`:'')+jr(tab)+form(tab);
+ else h={coa,L:led,TB:tb,T:tt}[tab]();$('#mn').innerHTML=h;
+ const g=$('#ga');if(g)g.onclick=()=>{$('#gl').insertAdjacentHTML('beforeend',gr(gN++))};
+ const fm=$('#fm');if(fm)fm.onsubmit=e=>{e.preventDefault();const r=save(fm.dataset.k);msg=r?['bad',r]:['ok','บันทึกแล้ว – ผ่านรายการไปบัญชีแยกประเภททั่วไปและบัญชีย่อยอัตโนมัติ'];draw()}}
+$('#nv').onclick=e=>{const t=e.target.dataset.t;if(t){tab=t;msg=null;draw();scrollTo(0,0)}};
+$('#ld').onclick=()=>{E=JSON.parse(JSON.stringify(SAMPLE));msg=null;draw()};
+$('#cl').onclick=()=>{E=[];msg=null;draw()};
+draw();
+</script></body></html>
